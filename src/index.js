@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import Promise from 'bluebird';
 
 import auth from './routes/auth';
+import users from './routes/users';
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGODB_URL,{ useNewUrlParser: true }, (err) => {
 })
 
 app.use('/api/auth', auth);
+app.use('/api/users', users);
 
 
 app.get('/*', (req,res) => {
