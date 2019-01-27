@@ -11,7 +11,7 @@ router.use(authenticate);
 
 router.get("/", (req,res) => {
     Book.find( { userId: req.currentUser._id })
-        .then(book => res.json({book}));
+        .then(books => res.json({books}));
 })
 
 router.post("/", (req, res) => {
