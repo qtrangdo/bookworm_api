@@ -2,9 +2,23 @@ import express from 'express';
 import authenticate from '../middleware/authenticate';
 import request from 'request-promise';
 import { parseString } from 'xml2js';
+import Book from '../models/Book';
+import parseError from '../utils/parseError';
 
 const router = express.Router();
 router.use(authenticate);
+
+
+router.get("/", (req,res) => {
+    Book.find( { userId: req.currentUser._id })
+        .then(book => res.json({book}));
+})
+
+router.post("/", (req, res) => {
+    Book.create({...req.body.book, userId: req.currentUser._id})
+        .then(book => res.json({book}))
+        .catch(err => res.status(400).json({errors: parseError(err.errors)}))
+});
 
 router.get('/search', (req,res) => {
     request.get(`https://www.goodreads.com/search/index.xml?key=${process.env.GOODREADS_KEY}&q=${req.query.q}`)
